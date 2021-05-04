@@ -1,3 +1,4 @@
+algorithm,graph,timeout,seed,k,epsilon,imbalance,totalPartitionTime,objective,km1,cut,failed
 Zoltan-AlgD,192bit.mtx.hgr,no,0,128,0.03,0.028999999999999915,6.71,cut,97859,13663,no
 Zoltan-AlgD,192bit.mtx.hgr,no,1,128,0.03,0.028999999999999915,6.64,cut,94682,13676,no
 Zoltan-AlgD,192bit.mtx.hgr,no,2,128,0.03,0.028999999999999915,6.85,cut,97811,13668,no
