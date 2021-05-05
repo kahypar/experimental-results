@@ -10,6 +10,17 @@ axis_text_size <- function(latex_export = F,
   }
 }
 
+legend_text_size <- function(latex_export = F,
+                           small_size = F) {
+  if ( small_size ) {
+    return(6)
+  } else if ( latex_export ) {
+    return(8)
+  } else {
+    return(10)
+  }
+}
+
 axis_title_size <- function(latex_export = F,
                             small_size = F) {
   if ( small_size ) {
@@ -67,7 +78,7 @@ create_theme <- function(latex_export = F,
                legend.title=element_blank(),
                legend.margin = margin(-5, 0, 0, 0),
                legend.key=element_blank(),
-               legend.text = element_text(size = axis_text_size(latex_export, small_size)),
+               legend.text = element_text(size = legend_text_size(latex_export, small_size)),
                legend.box = NULL,
                legend.title.align = 0.5,
                strip.background = element_blank(),

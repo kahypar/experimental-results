@@ -7,6 +7,7 @@ source("../plots/performance_profiles.R")
 ############## SETUP DATA FRAMES ############## 
 
 # Read Data Frames
+instances <- read.csv("instances.csv", header = TRUE)
 cut_kahypar_r <- aggreg_data(read.csv("cut_rKaHyPar.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 cut_kahypar_r_s <- aggreg_data(read.csv("cut_rkahypar-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 cut_kahypar_r_cac_s <- aggreg_data(read.csv("cut_rkahypar-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
@@ -23,6 +24,24 @@ km1_kahypar_k <- aggreg_data(read.csv("km1_kKaHyPar.csv", header = TRUE), timeli
 km1_kahypar_k_s <- aggreg_data(read.csv("km1_kkahypar-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 km1_kahypar_k_cac_s <- aggreg_data(read.csv("km1_kkahypar-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 km1_kahypar_k_f_cac_s <- aggreg_data(read.csv("km1_kkahypar-f-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+
+# Compute Average Time per Pin
+cut_kahypar_r <- compute_avg_time_per_pin(cut_kahypar_r, instances)
+cut_kahypar_r_s <- compute_avg_time_per_pin(cut_kahypar_r_s, instances)
+cut_kahypar_r_cac_s <- compute_avg_time_per_pin(cut_kahypar_r_cac_s, instances)
+cut_kahypar_r_f_cac_s <- compute_avg_time_per_pin(cut_kahypar_r_f_cac_s, instances)
+km1_kahypar_r <- compute_avg_time_per_pin(km1_kahypar_r, instances)
+km1_kahypar_r_s <- compute_avg_time_per_pin(km1_kahypar_r_s, instances)
+km1_kahypar_r_cac_s <- compute_avg_time_per_pin(km1_kahypar_r_cac_s, instances)
+km1_kahypar_r_f_cac_s <- compute_avg_time_per_pin(km1_kahypar_r_f_cac_s, instances)
+cut_kahypar_k <- compute_avg_time_per_pin(cut_kahypar_k, instances)
+cut_kahypar_k_s <- compute_avg_time_per_pin(cut_kahypar_k_s, instances)
+cut_kahypar_k_cac_s <- compute_avg_time_per_pin(cut_kahypar_k_cac_s, instances)
+cut_kahypar_k_f_cac_s <- compute_avg_time_per_pin(cut_kahypar_k_f_cac_s, instances)
+km1_kahypar_k <- compute_avg_time_per_pin(km1_kahypar_k, instances)
+km1_kahypar_k_s <- compute_avg_time_per_pin(km1_kahypar_k_s, instances)
+km1_kahypar_k_cac_s <- compute_avg_time_per_pin(km1_kahypar_k_cac_s, instances)
+km1_kahypar_k_f_cac_s <- compute_avg_time_per_pin(km1_kahypar_k_f_cac_s, instances)
 
 # Set Algorithm Name
 cut_kahypar_r$algorithm <- "$r$KaHyPar"
@@ -79,55 +98,55 @@ scaling <- 1.25
 order <- c("$r$KaHyPar", "$r$KaHyPar$-$S", "$r$KaHyPar$-$CAC$-$S", "$r$KaHyPar$-$F$-$CAC$-$S")
 tikz("~/kahypar-jea/tikz_plots/cut_kahypar_r_running_time.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(running_time_box_plot(list(cut_kahypar_r, 
-                                 cut_kahypar_r_s, 
-                                 cut_kahypar_r_cac_s, 
-                                 cut_kahypar_r_f_cac_s), 
-                            show_infeasible_tick = T,
-                            show_timeout_tick = T,
-                            order = order,
-                            latex_export = T,
-                            small_size = F))
+print(running_time_per_pin_box_plot(list(cut_kahypar_r, 
+                                         cut_kahypar_r_s, 
+                                         cut_kahypar_r_cac_s, 
+                                         cut_kahypar_r_f_cac_s), 
+                                    show_infeasible_tick = T,
+                                    show_timeout_tick = T,
+                                    order = order,
+                                    latex_export = T,
+                                    small_size = F))
 dev.off()
 
 tikz("~/kahypar-jea/tikz_plots/km1_kahypar_r_running_time.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(running_time_box_plot(list(km1_kahypar_r, 
-                                 km1_kahypar_r_s, 
-                                 km1_kahypar_r_cac_s, 
-                                 km1_kahypar_r_f_cac_s), 
-                            show_infeasible_tick = T,
-                            show_timeout_tick = T,
-                            order = order,
-                            latex_export = T,
-                            small_size = F))
+print(running_time_per_pin_box_plot(list(km1_kahypar_r, 
+                                         km1_kahypar_r_s, 
+                                         km1_kahypar_r_cac_s, 
+                                         km1_kahypar_r_f_cac_s), 
+                                    show_infeasible_tick = T,
+                                    show_timeout_tick = T,
+                                    order = order,
+                                    latex_export = T,
+                                    small_size = F))
 dev.off()
 
 order <- c("$k$KaHyPar", "$k$KaHyPar$-$S", "$k$KaHyPar$-$CAC$-$S", "$k$KaHyPar$-$F$-$CAC$-$S")
 tikz("~/kahypar-jea/tikz_plots/cut_kahypar_k_running_time.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(running_time_box_plot(list(cut_kahypar_k, 
-                                 cut_kahypar_k_s, 
-                                 cut_kahypar_k_cac_s, 
-                                 cut_kahypar_k_f_cac_s), 
-                            show_infeasible_tick = T,
-                            show_timeout_tick = T,
-                            order = order,
-                            latex_export = T,
-                            small_size = F))
+print(running_time_per_pin_box_plot(list(cut_kahypar_k, 
+                                         cut_kahypar_k_s, 
+                                         cut_kahypar_k_cac_s, 
+                                         cut_kahypar_k_f_cac_s), 
+                                    show_infeasible_tick = T,
+                                    show_timeout_tick = T,
+                                    order = order,
+                                    latex_export = T,
+                                    small_size = F))
 dev.off()
 
 tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_running_time.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(running_time_box_plot(list(km1_kahypar_k, 
-                                 km1_kahypar_k_s, 
-                                 km1_kahypar_k_cac_s, 
-                                 km1_kahypar_k_f_cac_s), 
-                            show_infeasible_tick = F,
-                            show_timeout_tick = T,
-                            order = order,
-                            latex_export = T,
-                            small_size = F))
+print(running_time_per_pin_box_plot(list(km1_kahypar_k, 
+                                         km1_kahypar_k_s, 
+                                         km1_kahypar_k_cac_s, 
+                                         km1_kahypar_k_f_cac_s), 
+                                    show_infeasible_tick = F,
+                                    show_timeout_tick = T,
+                                    order = order,
+                                    latex_export = T,
+                                    small_size = F))
 dev.off()
 
 

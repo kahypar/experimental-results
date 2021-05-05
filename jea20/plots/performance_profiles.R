@@ -8,7 +8,9 @@ performace_plot <- function(dataframes,
                             show_infeasible_tick = T,
                             show_timeout_tick = T,
                             widths = c(4,2,1,1),
+                            title = NULL,
                             legend_top_margin = 0,
+                            show_legend = TRUE,
                             latex_export = F,
                             small_size = F) {
   
@@ -32,25 +34,53 @@ performace_plot <- function(dataframes,
                                     plot_km1_quality[[3]]+theme(plot.margin =  margin(5.5, -2.9, 0, 0)),
                                     plot_km1_quality[[4]]+theme(plot.margin =  margin(5.5, 0, 0, 0)),
                                     widths = widths, ncol = 4, draw=F)
-    combined_plot <- annotate_figure(combined_plot, 
-                                     bottom = text_grob("Quality relative to best", 
-                                                        vjust = -1, size = axis_title_size(latex_export, small_size)))
   } else {
     combined_plot <- egg::ggarrange(plot_km1_quality[[1]]+theme(plot.margin =  margin(5.5, -2.9, 0, 5.5)),
                                     plot_km1_quality[[2]]+theme(legend.position = "none", plot.margin =  margin(5.5, -2.9, 0, 0)),
                                     plot_km1_quality[[3]]+theme(plot.margin =  margin(5.5, 0, 0, 0)),
                                     widths = widths[1:3], ncol = 3, draw=F)  
-    combined_plot <- annotate_figure(combined_plot, 
-                                     bottom = text_grob("Quality relative to best", 
-                                                        vjust = -1, size = axis_title_size(latex_export, small_size)))
   }
+  
+  combined_plot <- annotate_figure(combined_plot, 
+                                   bottom = text_grob("Quality relative to best", 
+                                                      vjust = -1.5, size = axis_title_size(latex_export, small_size)))
+  if ( !is.null(title) ) {
+    combined_plot <- annotate_figure(combined_plot, 
+                                     top = text_grob(title, vjust = 1.5, size = plot_title_size(latex_export)))
+  }
+  
   
   # Add Legend
   leg <- ggpubr::get_legend(plot_km1_quality[[2]])
-  combined_plot <- plot_grid(combined_plot, 
-                             ggpubr::as_ggplot(leg) + theme(plot.margin =  margin(legend_top_margin,0,0,0)), 
-                             ncol = 1, rel_heights = c(5,1))
+  if ( show_legend ) {
+    combined_plot <- plot_grid(combined_plot, 
+                               ggpubr::as_ggplot(leg) + theme(plot.margin =  margin(legend_top_margin,0,0,0)), 
+                               ncol = 1, rel_heights = c(5,1))
+  }
   return(combined_plot)
+}
+
+performace_plot_legend <- function(dataframes, 
+                                   legend_col = NULL,
+                                   latex_export = F,
+                                   small_size = F) {
+  
+  # Compute Performance Profile Plots
+  worst_ratio <- computeWorstRatioForAllFiltered(dataframes, objective = "avg_km1")
+  performance_profile = computePerformanceProfile(dataframes, "avg_km1",  
+                                                  worst_ratio = worst_ratio)
+  plot_km1_quality <-  performanceProfilePlot(performance_profile,
+                                              worst_ratio = worst_ratio,
+                                              hide_y_axis_title = FALSE,
+                                              show_infeasible_tick = TRUE,
+                                              show_timeout_tick = TRUE,
+                                              widths = c(3,2,1,1),
+                                              legend_col = legend_col,
+                                              latex_export = latex_export,
+                                              small_size = small_size) 
+  
+  leg <- ggpubr::get_legend(plot_km1_quality[[2]])
+  return(as_ggplot(leg))
 }
 
 performanceProfilePlot = function(profile_plots,
@@ -60,12 +90,14 @@ performanceProfilePlot = function(profile_plots,
                                   show_timeout_tick = T,
                                   worst_ratio = 999999999,
                                   widths = c(4,2,1,1),
+                                  legend_col = NULL,
                                   latex_export = F,
                                   small_size=F) {
-  
-  legend_col <- 4
-  if ( latex_export ) {
-    legend_col <- 2
+  if ( is.null(legend_col) ) {
+    legend_col <- 4
+    if ( latex_export ) {
+      legend_col <- 2
+    } 
   }
   
   original_aspect_ratio <- 1.236068 / 33.0

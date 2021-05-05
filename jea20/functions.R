@@ -34,14 +34,29 @@ if ( !exists( "tikzDeviceLoaded" ) ) {
                                 , "\\usepackage[utf8]{inputenc}"
                                 , "\\usepackage[T1]{fontenc}"
                                 , "\\usepackage{preview} "
-                                , "\\usepackage{latexsym,amsmath,amssymb,mathtools,textcomp,pifont,marvosym}"
+                                , "\\usepackage{latexsym,amsmath,amssymb,mathtools,textcomp,pifont,marvosym,eufrak}"
                                 , "\\usepackage{xcolor}"
-                                # ,paste("\\input{/home/tobias/mt-kahypar-paper/n-level-paper/macros.tex}",sep="")
+                                ,paste("\\input{/home/tobias/kahypar-jea/macros.tex}",sep="")
   )
   )
   tikzDeviceLoaded = T
 }
 
+graphclass = function(row) {
+  if(grepl("*dual*", row['graph'])){
+    return("Dual")
+  } else if (grepl("*primal*", row['graph'])) {
+    return("Primal")
+  } else if (grepl("sat14*", row['graph'])) {
+    return("Literal")
+  } else if (grepl("*mtx*", row['graph'])) {
+    return("SPM")
+  }  else if (grepl("*ISPD98*", row['graph'])) {
+    return("ISPD")
+  } else {
+    return("DAC")
+  }
+}
 
 csv_aggreg = function(df) data.frame(min_km1 = min(df$km1, na.rm=TRUE),
                                      avg_km1 = mean(df$km1, na.rm=TRUE),
@@ -83,6 +98,7 @@ aggreg_data <- function(data, timelimit, epsilon) {
   data <- data %>% mutate(timeout = ifelse(as.numeric(totalPartitionTime) >= timelimit, TRUE, FALSE)) %>%
     mutate(cut = ifelse(timeout == TRUE, NA, cut)) %>% 
     mutate(km1 = ifelse(timeout == TRUE, NA, km1)) %>% 
+    mutate(imbalance = ifelse(timeout == TRUE, 1.0, imbalance)) %>% 
     mutate(totalPartitionTime = ifelse(timeout == TRUE, timelimit, totalPartitionTime)) 
   # Invalidate and modify all results of timeout instances
   if ( !"failed" %in% colnames(data) ) {
@@ -97,7 +113,9 @@ aggreg_data <- function(data, timelimit, epsilon) {
   }
   data <- ddply(data, c("graph", "k", "epsilon",  "num_threads"), csv_aggreg)
   data <- data %>% mutate(avg_km1 = ifelse(is.na(avg_km1), Inf, avg_km1)) %>% 
-    mutate(min_km1 = ifelse(is.na(min_km1), Inf, min_km1))
+    mutate(min_km1 = ifelse(is.na(min_km1), Inf, min_km1))%>% 
+    mutate(min_cut = ifelse(is.na(min_cut), Inf, min_cut))%>% 
+    mutate(avg_cut = ifelse(is.na(avg_cut), Inf, avg_cut))
   data <- data %>% mutate(infeasible = ifelse(min_imbalance > epsilon + .Machine$double.eps & failed == F &
                                                 ( min_imbalance != 1.0 | avg_time < timelimit ), TRUE, FALSE)) 
   data <- data %>% mutate(invalid = ifelse(failed == T | infeasible == T | timeout == T, TRUE, FALSE))
