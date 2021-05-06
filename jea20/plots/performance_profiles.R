@@ -4,6 +4,7 @@ lam_trans = function() trans_new('lam',
 
 performace_plot <- function(dataframes, 
                             objective = "avg_km1", 
+                            effectivenes_test = F, 
                             hide_y_axis_title = F,
                             show_infeasible_tick = T,
                             show_timeout_tick = T,
@@ -66,8 +67,9 @@ performace_plot_legend <- function(dataframes,
                                    small_size = F) {
   
   # Compute Performance Profile Plots
-  worst_ratio <- computeWorstRatioForAllFiltered(dataframes, objective = "avg_km1")
+  worst_ratio <- computeWorstRatioForAllFiltered(dataframes, objective = "avg_km1", effectivenes_test = effectivenes_test)
   performance_profile = computePerformanceProfile(dataframes, "avg_km1",  
+                                                  effectivenes_test = effectivenes_test,
                                                   worst_ratio = worst_ratio)
   plot_km1_quality <-  performanceProfilePlot(performance_profile,
                                               worst_ratio = worst_ratio,
@@ -227,19 +229,30 @@ performanceProfilePlot = function(profile_plots,
   }
 }
 
-computeWorstRatioForAllFiltered = function(dataframes, objective){
+computeWorstRatioForAllFiltered = function(dataframes, objective,
+                                           effectivenes_test = F){
   for(i in 1:length(dataframes)) {
     # account for zero values
     dataframes[[i]] = dataframes[[i]] %>% mutate(!!(rlang::sym(objective)) := ifelse(!!(rlang::sym(objective)) %==% 0, 1, !!(rlang::sym(objective))))
     # correct sort order
-    dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k)), ]
+    if ( effectivenes_test ) {
+      dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k,instance)), ]
+    } else {
+      dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k)), ]
+    }
     dataframes[[i]]$ratio = -1
   }
   
   #sanity checks
   for(i in 2:length(dataframes)) {
-    stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
-              dataframes[[1]]$k == dataframes[[i]]$k)
+    if ( effectivenes_test ) {
+      stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
+                dataframes[[1]]$k == dataframes[[i]]$k, 
+                dataframes[[1]]$instance == dataframes[[i]]$instance)
+    } else {
+      stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
+                dataframes[[1]]$k == dataframes[[i]]$k)
+    }
   }
   
   worst_ratio = 0
@@ -263,18 +276,29 @@ computeWorstRatioForAllFiltered = function(dataframes, objective){
 
 computePerformanceProfile = function(dataframes, 
                                      objective,
+                                     effectivenes_test = F,
                                      worst_ratio){
   for(i in 1:length(dataframes)) {
     # Account for zero values
     dataframes[[i]] = dataframes[[i]] %>% mutate(!!(rlang::sym(objective)) := ifelse(!!(rlang::sym(objective)) %==% 0, 1, !!(rlang::sym(objective))))
     # Correct sort order
-    dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k)), ]
+    if ( effectivenes_test ) {
+      dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k,instance)), ]
+    } else {
+      dataframes[[i]] = dataframes[[i]][with(dataframes[[i]], order(graph,k)), ]
+    }
   }
   
   #Sanity checks
   for(i in 2:length(dataframes)) {
-    stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
-              dataframes[[1]]$k == dataframes[[i]]$k)
+    if ( effectivenes_test ) {
+      stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
+                dataframes[[1]]$k == dataframes[[i]]$k, 
+                dataframes[[1]]$instance == dataframes[[i]]$instance)
+    } else {
+      stopifnot(dataframes[[1]]$graph == dataframes[[i]]$graph, 
+                dataframes[[1]]$k == dataframes[[i]]$k)
+    }
   }
   
   # Find minima

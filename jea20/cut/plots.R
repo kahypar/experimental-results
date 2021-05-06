@@ -59,6 +59,29 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
                         "Zoltan-AlgD" = palette[[7]],
                         "Mondriaan" = palette[[8]])
 
+############## Trade-Off Plot ##############
+
+order <- c("$r$KaHyPar", "hMETIS-R", "hMETIS-K", "PaToH-D", "PaToH-Q", "Mondriaan", "Zoltan-AlgD")
+scaling <- 2.5
+tikz("~/kahypar-jea/tikz_plots/cut_tradeoff.tex", 
+     width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
+print(tradeoff_plot(list(kahypar_r, 
+                         patoh_d,
+                         patoh_q,
+                         hmetis_r,
+                         hmetis_k,
+                         zoltan_alg_d,
+                         mondriaan),
+                    relative_to = kahypar_k,
+                    objective = "avg_cut",
+                    order = order,
+                    ncol = 3,
+                    legend_col = 4,
+                    latex_export = T,
+                    small_size = F
+))
+dev.off()
+
 ############## Running Time Box Plot ############## 
 
 scaling <- 1.25
