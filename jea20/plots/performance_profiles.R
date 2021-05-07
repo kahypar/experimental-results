@@ -139,7 +139,8 @@ performanceProfilePlot = function(profile_plots,
     theme(axis.title.x = element_blank())
   
   if(hide_y_axis_title) {
-    a=  a +  theme(axis.title.y = element_blank())
+    a=  a +  theme(axis.title.y = element_blank(),
+                   axis.text.y = element_blank())
   }
   
   # Second Plot from tau = 1.1 to tau = 2

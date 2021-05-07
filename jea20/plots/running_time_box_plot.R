@@ -112,13 +112,22 @@ running_time_per_pin_box_plot <- function(dataframes,
   y_labels <- c(to_latex_math_mode("0", latex_export))
   max_exp_time <- ceil(log10(max_time))
   max_pow10_time <- 10^max_exp_time
-  y_breaks <- c(0, 10^seq(from = 0, to = max_exp_time))
-  y_labels <- c(to_latex_math_mode("0", latex_export), pow_text(10, seq(from = 0, to = max_exp_time), latex_export))
+  y_breaks <- c(0, 10^seq(from = 0, to = max_exp_time - 1))
+  y_labels <- c(to_latex_math_mode("0", latex_export), pow_text(10, seq(from = 0, to = max_exp_time - 1), latex_export))
   
-  contains_invalid_results <- any(result$infeasible) | any(result$timeout)
+  contains_infeasible_results <- any(result$infeasible)
+  contains_timeout_results <- any(result$timeout)
+  contains_invalid_results <- contains_infeasible_results | contains_timeout_results
+  contains_only_one_invalid_type <- xor(contains_infeasible_results, contains_timeout_results)
   if ( contains_invalid_results ) {
-    infeasible_value = max_pow10_time + ( 2.5 * max_pow10_time )
-    timeout_value = max_pow10_time + ( 7.5 * max_pow10_time  )
+    infeasible_factor <- 2
+    timeout_factor <- 7.5
+    if ( contains_only_one_invalid_type ) {
+      infeasible_factor <- 1.5
+      timeout_factor <- 1.5
+    }
+    infeasible_value = ( infeasible_factor * max_pow10_time )
+    timeout_value = ( timeout_factor * max_pow10_time  )
     result <- result %>% mutate(plotted_avg_time = ifelse(timeout == T, timeout_value, plotted_avg_time))
     result <- result %>% mutate(plotted_avg_time = ifelse(infeasible == T, infeasible_value, plotted_avg_time))
     y_breaks <- add_infeasible_break(y_breaks, infeasible_value, show_infeasible_tick, latex_export)
@@ -162,7 +171,7 @@ running_time_per_pin_box_plot <- function(dataframes,
   }
   running_time <- running_time + stat_boxplot(aes(color = algorithm), geom ='errorbar', width = 0.6) +
     geom_boxplot(aes(color = algorithm), outlier.shape = NA, alpha = 0.75) +
-    geom_text(aes(x = algorithm, y = (max_time + max_pow10_time) / 2, label=round(gmean_time, 2), group = algorithm), result_gmean, 
+    geom_text(aes(x = algorithm, y = 0.5 * max_pow10_time, label=round(gmean_time, 2), group = algorithm), result_gmean, 
               size = plot_text_size(latex_export),  position = position_dodge(width=0.75)) +
     scale_y_continuous(trans = pseudo_log_trans(base = 10), breaks=y_breaks, labels = y_labels, limits = y_limits) +
     theme_bw(base_size = 10) +
@@ -171,7 +180,7 @@ running_time_per_pin_box_plot <- function(dataframes,
     labs(x="", y=paste("Time per pin",to_latex_math_mode("[\\mu s]",latex_export),sep=" ")) +
     create_theme(latex_export, small_size, legend_position = "none", x_axis_text_angle = text_angle, x_axis_text_hjust = 1)
   if ( contains_invalid_results ) {
-    running_time <- running_time + geom_hline(yintercept = (max_pow10_time + infeasible_value) / 2, size = 0.5, alpha = 0.5)
+    running_time <- running_time + geom_hline(yintercept = max_pow10_time, size = 0.5, alpha = 0.5)
   }
   
   if ( !show_legend ) {

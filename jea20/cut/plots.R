@@ -82,7 +82,7 @@ print(tradeoff_plot(list(kahypar_r,
 ))
 dev.off()
 
-############## Running Time Box Plot ############## 
+  ############## Running Time Box Plot ############## 
 
 scaling <- 1.25
 

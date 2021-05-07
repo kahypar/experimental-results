@@ -26,6 +26,7 @@ library(stringi)
 library(ggpubr)
 library(gridExtra)
 library(cowplot)
+library(lemon)
 
 if ( !exists( "tikzDeviceLoaded" ) ) {  
   library(tikzDevice) #if not installed call install.packages("tikzDevice", repos="http://R-Forge.R-project.org")
@@ -286,6 +287,25 @@ effectivenessTestPerformanceProfile <- function(effectiveness_test_df,
                              small_size = small_size)
   return(quality) 
 }
+
+shift_legend <- function(p) {
+  # ...
+  # to grob
+  gp <- ggplotGrob(p)
+  facet.panels <- grep("^panel", gp[["layout"]][["name"]])
+  empty.facet.panels <- sapply(facet.panels, function(i) "zeroGrob" %in% class(gp[["grobs"]][[i]]))
+  empty.facet.panels <- facet.panels[empty.facet.panels]
+  
+  # establish name of empty panels
+  empty.facet.panels <- gp[["layout"]][empty.facet.panels, ]
+  names <- empty.facet.panels$name
+  # example of names:
+  #[1] "panel-3-2" "panel-3-3"
+  
+  # now we just need a simple call to reposition the legend
+  reposition_legend(p, 'center', panel=names, plot = T)
+}
+
 
 tradeoff_plot <- function(dataframes,
                           relative_to,
