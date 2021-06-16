@@ -1,4 +1,4 @@
-## Experimental Results of Publication "High-Quality Hypergraph Partitioning"
+## Experimental Results for Publication "High-Quality Hypergraph Partitioning"
 
 This repository contains the experimental results used in the publication *High-Quality Hypergraph Partitioning* (currently under review, arxiv link will be provided once available). In each folder, we provide the results of each tested partitioner for a specific experiment in a seperate csv file. The csv files contain the following data/columns:
 
