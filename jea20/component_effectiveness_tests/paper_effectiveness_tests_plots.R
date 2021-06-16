@@ -4,7 +4,7 @@ source("../plots/running_time_box_plot.R")
 source("../plots/relative_running_time_plot.R")
 source("../plots/performance_profiles.R")
 
-############## SETUP DATA FRAMES ############## 
+############## SETUP DATA FRAMES ##############
 
 # Specify Colors of Algorithms in Plots
 palette <- brewer.pal(n = 9, name = "Set1")
@@ -15,18 +15,18 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
                         "$k$KaHyPar$-$F$-$CAC$-$S" = palette[[7]])
 
 # Precomputed Effectiveness Tests
-eff_km1_kahypar_k_s <- read.csv("effectiveness_tests/km1_kahypar_k_s.csv", header = T)
-eff_km1_kahypar_k_cac_s <- read.csv("effectiveness_tests/km1_kahypar_k_cac_s.csv", header = T)
-eff_km1_kahypar_k_f_cac_s <- read.csv("effectiveness_tests/km1_kahypar_k_f_cac_s.csv", header = T)
+eff_km1_kahypar_k_s <- read.csv("effectiveness_tests/km1_kKahypar_s.csv", header = T)
+eff_km1_kahypar_k_cac_s <- read.csv("effectiveness_tests/km1_kKahypar_cac_s.csv", header = T)
+eff_km1_kahypar_k_f_cac_s <- read.csv("effectiveness_tests/km1_kKahypar_f_cac_s.csv", header = T)
 
 scaling <- 1
 
-tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_s.tex", 
+tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_s.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_s, 
+print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_s,
                                           "$k$KaHyPar",
                                           "$k$KaHyPar$-$S",
-                                          objective = "min_km1", 
+                                          objective = "min_km1",
                                           hide_y_axis_title = F,
                                           show_infeasible_tick = F,
                                           show_timeout_tick = F,
@@ -36,12 +36,12 @@ print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_s,
                                           small_size = T))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_cac_s.tex", 
+tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_cac_s.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_cac_s, 
+print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_cac_s,
                                           "$k$KaHyPar",
                                           "$k$KaHyPar$-$CAC$-$S",
-                                          objective = "min_km1", 
+                                          objective = "min_km1",
                                           hide_y_axis_title = T,
                                           show_infeasible_tick = F,
                                           show_timeout_tick = F,
@@ -51,12 +51,12 @@ print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_cac_s,
                                           small_size = T))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_f_cac_s.tex", 
+tikz("~/kahypar-jea/tikz_plots/eff_km1_kahypar_k_f_cac_s.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_f_cac_s, 
+print(effectivenessTestPerformanceProfile(eff_km1_kahypar_k_f_cac_s,
                                           "$k$KaHyPar",
                                           "$k$KaHyPar$-$F$-$CAC$-$S",
-                                          objective = "min_km1", 
+                                          objective = "min_km1",
                                           hide_y_axis_title = T,
                                           show_infeasible_tick = F,
                                           show_timeout_tick = F,
