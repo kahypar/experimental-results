@@ -27,3 +27,5 @@ In the following, we give a brief overview of the data contained in the differen
 - **repeated_executions**: Contains results for our evolutionary algorithm and for several partitioners that we run several times until they exceed a timelimit of eight hours for each instance (corresponds to Section 4.3.5).
 - **edge_partitioning**: Results for different hypergraph partitioners for our case study *edge partitioning* (corresponds to Section 4.4)
 - **graph_partitioning**: Results for different (hyper)graph partitioners for our case study *graph partitioning* (corresponds to Section 4.5). The experiments are executed on two different benchmark sets. The suffix `_websocial` denotes results for benchmark set E and `_dimacs` denotes the results for benchmark set F.
+
+Additionally each folder contains R scripts that we used to generate our plots.
