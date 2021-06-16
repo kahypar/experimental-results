@@ -4,46 +4,46 @@ source("../plots/running_time_box_plot.R")
 source("../plots/relative_running_time_plot.R")
 source("../plots/performance_profiles.R")
 
-############## SETUP DATA FRAMES ############## 
+############## SETUP DATA FRAMES ##############
 
 # Read Data Frames
 instances <- read.csv("instances.csv", header = TRUE)
 instances$pins <- 2 * instances$m
-kaffpa_strong_f <- aggreg_data(read.csv("cut_kaffpa_strong_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strong_g <- aggreg_data(read.csv("cut_kaffpa_strong_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_f <- aggreg_data(read.csv("cut_kaffpa_strong_old_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_g <- aggreg_data(read.csv("cut_kaffpa_strong_old_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strong_f$type <- "WebSocial"
 kaffpa_strong_g$type <- "Dimacs"
 kaffpa_strong_f$graph <- paste(kaffpa_strong_f$graph, ".hgr", sep = "")
 kaffpa_strong_g$graph <- paste(kaffpa_strong_g$graph, ".hgr", sep = "")
 kaffpa_strong <- rbind(kaffpa_strong_f, kaffpa_strong_g)
-kaffpa_strong_opt_f <- aggreg_data(read.csv("cut_kaffpa_strong_opt_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strong_opt_g <- aggreg_data(read.csv("cut_kaffpa_strong_opt_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_opt_f <- aggreg_data(read.csv("cut_kaffpa_strong_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_opt_g <- aggreg_data(read.csv("cut_kaffpa_strong_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strong_opt_f$type <- "WebSocial"
 kaffpa_strong_opt_g$type <- "Dimacs"
 kaffpa_strong_opt_f$graph <- paste(kaffpa_strong_opt_f$graph, ".hgr", sep = "")
 kaffpa_strong_opt_g$graph <- paste(kaffpa_strong_opt_g$graph, ".hgr", sep = "")
 kaffpa_strong_opt <- rbind(kaffpa_strong_opt_f, kaffpa_strong_opt_g)
-kaffpa_strongs_f <- aggreg_data(read.csv("cut_kaffpa_strongs_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strongs_g <- aggreg_data(read.csv("cut_kaffpa_strongs_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_f <- aggreg_data(read.csv("cut_kaffpa_strongs_old_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_g <- aggreg_data(read.csv("cut_kaffpa_strongs_old_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strongs_f$type <- "WebSocial"
 kaffpa_strongs_g$type <- "Dimacs"
 kaffpa_strongs_f$graph <- paste(kaffpa_strongs_f$graph, ".hgr", sep = "")
 kaffpa_strongs_g$graph <- paste(kaffpa_strongs_g$graph, ".hgr", sep = "")
 kaffpa_strongs <- rbind(kaffpa_strongs_f, kaffpa_strongs_g)
-kaffpa_strongs_opt_f <- aggreg_data(read.csv("cut_kaffpa_strongs_opt_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strongs_opt_g <- aggreg_data(read.csv("cut_kaffpa_strongs_opt_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_opt_f <- aggreg_data(read.csv("cut_kaffpa_strongs_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_opt_g <- aggreg_data(read.csv("cut_kaffpa_strongs_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strongs_opt_f$type <- "WebSocial"
 kaffpa_strongs_opt_g$type <- "Dimacs"
 kaffpa_strongs_opt_f$graph <- paste(kaffpa_strongs_opt_f$graph, ".hgr", sep = "")
 kaffpa_strongs_opt_g$graph <- paste(kaffpa_strongs_opt_g$graph, ".hgr", sep = "")
 kaffpa_strongs_opt <- rbind(kaffpa_strongs_opt_f, kaffpa_strongs_opt_g)
-kahypar_k_f <- aggreg_data(read.csv("cut_kahypar_k_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kahypar_k_g <- aggreg_data(read.csv("cut_kahypar_k_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kahypar_k_f <- aggreg_data(read.csv("cut_kKahypar_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kahypar_k_g <- aggreg_data(read.csv("cut_kKahypar_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kahypar_k_f$type <- "WebSocial"
 kahypar_k_g$type <- "Dimacs"
 kahypar_k <- rbind(kahypar_k_f, kahypar_k_g)
-kahypar_r_f <- aggreg_data(read.csv("cut_kahypar_r_graph_f.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kahypar_r_g <- aggreg_data(read.csv("cut_kahypar_r_graph_g.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kahypar_r_f <- aggreg_data(read.csv("cut_rKahypar_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kahypar_r_g <- aggreg_data(read.csv("cut_rKahypar_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kahypar_r_f$type <- "WebSocial"
 kahypar_r_g$type <- "Dimacs"
 kahypar_r <- rbind(kahypar_r_f, kahypar_r_g)
@@ -98,10 +98,10 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
                         "KaFFPa-StrongS*" = "#AE8D0A")
 
 order <- c("$k$KaHyPar", "$r$KaHyPar", "KaFFPa-Strong", "KaFFPa-Strong*", "KaFFPa-StrongS", "KaFFPa-StrongS*")
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_running_time_kaffpa_strongs.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_running_time_kaffpa_strongs.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(running_time_per_pin_box_plot(list(kaffpa_strongs_f,
-                                         kaffpa_strongs_opt_f), 
+                                         kaffpa_strongs_opt_f),
                                     show_infeasible_tick = F,
                                     show_timeout_tick = T,
                                     order = order,
@@ -112,10 +112,10 @@ print(running_time_per_pin_box_plot(list(kaffpa_strongs_f,
                                     small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_graph_running_time_kaffpa_strong.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_graph_running_time_kaffpa_strong.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(running_time_per_pin_box_plot(list(kaffpa_strong_g,
-                                         kaffpa_strong_opt_g), 
+                                         kaffpa_strong_opt_g),
                                     show_infeasible_tick = F,
                                     show_timeout_tick = T,
                                     order = order,
@@ -126,11 +126,11 @@ print(running_time_per_pin_box_plot(list(kaffpa_strong_g,
                                     small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_running_time_kahypar_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_running_time_kahypar_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(running_time_per_pin_box_plot(list(kahypar_k_f,
                                          kahypar_r_f,
-                                         kaffpa_strongs_opt_f), 
+                                         kaffpa_strongs_opt_f),
                                     show_infeasible_tick = F,
                                     show_timeout_tick = T,
                                     order = order,
@@ -141,12 +141,12 @@ print(running_time_per_pin_box_plot(list(kahypar_k_f,
                                     small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_running_time_kahypar_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_running_time_kahypar_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(running_time_per_pin_box_plot(list(kahypar_k_g,
                                          kahypar_r_g,
                                          kaffpa_strong_opt_g,
-                                         kaffpa_strongs_opt_g), 
+                                         kaffpa_strongs_opt_g),
                                     show_infeasible_tick = F,
                                     show_timeout_tick = T,
                                     order = order,
@@ -157,15 +157,15 @@ print(running_time_per_pin_box_plot(list(kahypar_k_g,
                                     small_size = F))
 dev.off()
 
-############## Performance Profile Plot ############## 
+############## Performance Profile Plot ##############
 
 scaling <- 1.25
 
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kaffpa_strongs.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kaffpa_strongs.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kaffpa_strongs_f,
-                           kaffpa_strongs_opt_f), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_f),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -175,11 +175,11 @@ print(performace_plot(list(kaffpa_strongs_f,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_graph_kaffpa_strong.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_graph_kaffpa_strong.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kaffpa_strong_g,
-                           kaffpa_strong_opt_g), 
-                      objective = "avg_cut", 
+                           kaffpa_strong_opt_g),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -190,12 +190,12 @@ print(performace_plot(list(kaffpa_strong_g,
 dev.off()
 
 
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_k_f,
                            kahypar_r_f,
-                           kaffpa_strongs_opt_f), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_f),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -205,11 +205,11 @@ print(performace_plot(list(kahypar_k_f,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_k_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_k_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_k_f,
-                           kaffpa_strongs_opt_f), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_f),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -219,11 +219,11 @@ print(performace_plot(list(kahypar_k_f,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_r_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_web_graphs_kahypar_r_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_r_f,
-                           kaffpa_strongs_opt_f), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_f),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -233,13 +233,13 @@ print(performace_plot(list(kahypar_r_f,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_k_g,
                            kahypar_r_g,
                            kaffpa_strong_opt_g,
-                           kaffpa_strongs_opt_g), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_g),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -249,12 +249,12 @@ print(performace_plot(list(kahypar_k_g,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_k_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_k_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_k_g,
                            kaffpa_strong_opt_g,
-                           kaffpa_strongs_opt_g), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_g),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
@@ -264,12 +264,12 @@ print(performace_plot(list(kahypar_k_g,
                       small_size = F))
 dev.off()
 
-tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_r_vs_kaffpa.tex", 
+tikz("~/kahypar-jea/tikz_plots/cut_dimacs_kahypar_r_vs_kaffpa.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_r_g,
                            kaffpa_strong_opt_g,
-                           kaffpa_strongs_opt_g), 
-                      objective = "avg_cut", 
+                           kaffpa_strongs_opt_g),
+                      objective = "avg_cut",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
