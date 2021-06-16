@@ -4,19 +4,19 @@ source("../plots/running_time_box_plot.R")
 source("../plots/relative_running_time_plot.R")
 source("../plots/performance_profiles.R")
 
-############## SETUP DATA FRAMES ############## 
+############## SETUP DATA FRAMES ##############
 
 # Read Data Frames
 instances <- dbGetQuery(dbConnect(SQLite(), dbname="instances.db"), "select * from ex1")
-kahypar_k <- aggreg_data(read.csv("km1_kKaHyPar_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-patoh_d <- aggreg_data(read.csv("km1_patoh_d_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-patoh_q <- aggreg_data(read.csv("km1_patoh_q_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-hmetis_r <- aggreg_data(read.csv("km1_r_hmetis_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-hmetis_k <- aggreg_data(read.csv("km1_k_hmetis_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-zoltan_alg_d <- aggreg_data(read.csv("km1_zoltan_algd_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-mondriaan <- aggreg_data(read.csv("km1_mondriaan_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kahypar_k <- aggreg_data(read.csv("km1_kKaHyPar.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+patoh_d <- aggreg_data(read.csv("km1_patoh_d.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+patoh_q <- aggreg_data(read.csv("km1_patoh_q.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+hmetis_r <- aggreg_data(read.csv("km1_hmetis-r.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+hmetis_k <- aggreg_data(read.csv("km1_hmetis-k.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+zoltan_alg_d <- aggreg_data(read.csv("km1_zoltan-algd.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+mondriaan <- aggreg_data(read.csv("km1_mondriaan.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 mondriaan <- mondriaan %>% mutate(infeasible = ifelse(failed == TRUE, TRUE, FALSE))
-hype <- aggreg_data(read.csv("km1_hype_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+hype <- aggreg_data(read.csv("km1_hype.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 
 # Compute Average Time per Pin
 kahypar_k <- compute_avg_time_per_pin(kahypar_k, instances)
@@ -50,12 +50,12 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
                         "Mondriaan" = palette[[8]],
                         "HYPE" = palette[[9]])
 
-############## Running Time Box Plot ############## 
+############## Running Time Box Plot ##############
 
 scaling <- 1.195
 
 order <- c("HYPE", "PaToH-D", "PaToH-Q", "Mondriaan", "Zoltan-AlgD", "hMETIS-R", "hMETIS-K", "$k$KaHyPar")
-tikz("~/kahypar-jea/tikz_plots/edge_partitioning_running_time_overall.tex", 
+tikz("~/kahypar-jea/tikz_plots/edge_partitioning_running_time_overall.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(running_time_per_pin_box_plot(list(kahypar_k,
                                          patoh_d,
@@ -64,7 +64,7 @@ print(running_time_per_pin_box_plot(list(kahypar_k,
                                          hmetis_k,
                                          zoltan_alg_d,
                                          mondriaan,
-                                         hype), 
+                                         hype),
                                     show_infeasible_tick = T,
                                     show_timeout_tick = F,
                                     order = order,
@@ -73,11 +73,11 @@ print(running_time_per_pin_box_plot(list(kahypar_k,
                                     small_size = F))
 dev.off()
 
-############## Performance Profile Plot (ALL) ############## 
+############## Performance Profile Plot (ALL) ##############
 
 scaling <- 1.29
 
-tikz("~/kahypar-jea/tikz_plots/edge_partitioning_km1_kahypar_k.tex", 
+tikz("~/kahypar-jea/tikz_plots/edge_partitioning_km1_kahypar_k.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
 print(performace_plot(list(kahypar_k,
                            patoh_d,
@@ -86,8 +86,8 @@ print(performace_plot(list(kahypar_k,
                            hmetis_k,
                            zoltan_alg_d,
                            mondriaan,
-                           hype), 
-                      objective = "avg_km1", 
+                           hype),
+                      objective = "avg_km1",
                       hide_y_axis_title = F,
                       show_infeasible_tick = T,
                       show_timeout_tick = F,
@@ -102,8 +102,8 @@ dev.off()
 
 print(performace_plot(list(patoh_q,
                            hmetis_r,
-                           hmetis_k), 
-                      objective = "avg_km1", 
+                           hmetis_k),
+                      objective = "avg_km1",
                       hide_y_axis_title = F,
                       show_infeasible_tick = T,
                       show_timeout_tick = F,
