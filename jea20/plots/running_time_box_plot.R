@@ -64,7 +64,7 @@ running_time_box_plot <- function(dataframes,
     geom_jitter(aes(y = plotted_avg_time, fill=algorithm), size = plot_point_size(latex_export), alpha = 0.33, pch = 21, width = 0.3) +
     stat_boxplot(aes(color = algorithm), geom ='errorbar', width = 0.6) +
     geom_boxplot(aes(color = algorithm), outlier.shape = NA, alpha = 0.75) +
-    geom_text(aes(x = algorithm, y = 0, label=round(gmean_time, 2), group = algorithm), result_gmean, 
+    geom_text(aes(x = algorithm, y = 0, label=round(gmean_time, 1), group = algorithm), result_gmean, 
               size = plot_text_size(latex_export),  position = position_dodge(width=0.75)) +
     scale_y_continuous(breaks=y_breaks, labels = y_labels, limits = y_limits) +
     coord_trans(y = "sqrt5") + 
@@ -171,9 +171,9 @@ running_time_per_pin_box_plot <- function(dataframes,
   }
   running_time <- running_time + stat_boxplot(aes(color = algorithm), geom ='errorbar', width = 0.6) +
     geom_boxplot(aes(color = algorithm), outlier.shape = NA, alpha = 0.75) +
-    geom_text(aes(x = algorithm, y = 0.5 * max_pow10_time, label=round(gmean_time, 2), group = algorithm), result_gmean, 
+    geom_text(aes(x = algorithm, y = 0.5 * max_pow10_time, label=round(gmean_time, 1), group = algorithm), result_gmean, 
               size = plot_text_size(latex_export),  position = position_dodge(width=0.75)) +
-    scale_y_continuous(trans = pseudo_log_trans(base = 10), breaks=y_breaks, labels = y_labels, limits = y_limits) +
+    scale_y_continuous(trans = pseudo_log_trans(sigma = 0.1, base = 10), breaks=y_breaks, labels = y_labels, limits = y_limits) +
     theme_bw(base_size = 10) +
     scale_color_manual(values=algo_color_mapping, drop = F) +
     scale_fill_manual(values=algo_color_mapping, drop = F) +

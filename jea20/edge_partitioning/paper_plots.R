@@ -15,6 +15,7 @@ hmetis_r <- aggreg_data(read.csv("km1_r_hmetis_edge_partitioning.csv", header = 
 hmetis_k <- aggreg_data(read.csv("km1_k_hmetis_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 zoltan_alg_d <- aggreg_data(read.csv("km1_zoltan_algd_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 mondriaan <- aggreg_data(read.csv("km1_mondriaan_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+mondriaan <- mondriaan %>% mutate(infeasible = ifelse(failed == TRUE, TRUE, FALSE))
 hype <- aggreg_data(read.csv("km1_hype_edge_partitioning.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 
 # Compute Average Time per Pin
@@ -51,7 +52,7 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
 
 ############## Running Time Box Plot ############## 
 
-scaling <- 1.16
+scaling <- 1.195
 
 order <- c("HYPE", "PaToH-D", "PaToH-Q", "Mondriaan", "Zoltan-AlgD", "hMETIS-R", "hMETIS-K", "$k$KaHyPar")
 tikz("~/kahypar-jea/tikz_plots/edge_partitioning_running_time_overall.tex", 
@@ -74,7 +75,7 @@ dev.off()
 
 ############## Performance Profile Plot (ALL) ############## 
 
-scaling <- 1.25
+scaling <- 1.29
 
 tikz("~/kahypar-jea/tikz_plots/edge_partitioning_km1_kahypar_k.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
@@ -89,11 +90,32 @@ print(performace_plot(list(kahypar_k,
                       objective = "avg_km1", 
                       hide_y_axis_title = F,
                       show_infeasible_tick = T,
-                      show_timeout_tick = T,
+                      show_timeout_tick = F,
                       widths = c(3,2,1,1),
                       legend_top_margin = 0,
+                      sparsify_x_last_window = T,
                       latex_export = T,
                       small_size = F))
 dev.off()
 
+# Wilcoxon Signed Ranked Tests
 
+print(performace_plot(list(patoh_q,
+                           hmetis_r,
+                           hmetis_k), 
+                      objective = "avg_km1", 
+                      hide_y_axis_title = F,
+                      show_infeasible_tick = T,
+                      show_timeout_tick = F,
+                      widths = c(3,2,1,1),
+                      legend_top_margin = 0,
+                      sparsify_x_last_window = T,
+                      latex_export = T,
+                      small_size = F))
+
+library(coin)
+
+print(wilcoxsign_test(patoh_q$avg_km1 ~ hmetis_r$avg_km1))
+print(wilcoxsign_test(patoh_q$avg_km1 ~ hmetis_k$avg_km1))
+print(wilcoxsign_test(hmetis_r$avg_km1 ~ hmetis_k$avg_km1))
+print(wilcoxsign_test(patoh_d$avg_km1 ~ patoh_q$avg_km1))

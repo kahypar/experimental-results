@@ -43,7 +43,7 @@ km1_kahypar_k$graph <- as.character(km1_kahypar_k$graph)
 
 ############## Running Time Box Plot ############## 
 
-scaling <- 1.16
+scaling <- 1.195
 
 order <- c("$k$KaHyPar", "$k$KaHyPar$-$S", "$k$KaHyPar$-$CAC$-$S", "$k$KaHyPar$-$F$-$CAC$-$S")
 tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_running_time.tex", 
@@ -61,7 +61,7 @@ dev.off()
 
 ############## Performance Profile Plot (kKaHyPar) ############## 
 
-scaling <- 1.25
+scaling <- 1.29
 
 tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_component_quality.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
@@ -78,3 +78,4 @@ print(performace_plot(list(km1_kahypar_k,
                       latex_export = T,
                       small_size = F))
 dev.off()
+

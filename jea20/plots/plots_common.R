@@ -34,7 +34,7 @@ axis_title_size <- function(latex_export = F,
 
 plot_text_size <- function(latex_export = F) {
   if ( latex_export ) {
-    return(2)
+    return(2.5)
   } else {
     return(4)
   }

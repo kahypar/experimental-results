@@ -12,6 +12,7 @@ performace_plot <- function(dataframes,
                             title = NULL,
                             legend_top_margin = 0,
                             show_legend = TRUE,
+                            sparsify_x_last_window = F,
                             latex_export = F,
                             small_size = F) {
   
@@ -25,6 +26,7 @@ performace_plot <- function(dataframes,
                                               show_infeasible_tick = show_infeasible_tick,
                                               show_timeout_tick = show_timeout_tick,
                                               widths = widths,
+                                              sparsify_x_last_window = sparsify_x_last_window,
                                               latex_export = latex_export,
                                               small_size = small_size) 
   
@@ -93,6 +95,7 @@ performanceProfilePlot = function(profile_plots,
                                   worst_ratio = 999999999,
                                   widths = c(4,2,1,1),
                                   legend_col = NULL,
+                                  sparsify_x_last_window = F,
                                   latex_export = F,
                                   small_size=F) {
   if ( is.null(legend_col) ) {
@@ -171,8 +174,15 @@ performanceProfilePlot = function(profile_plots,
   
   # Third Plot from tau = 2 to worst_ratio
   base_10 <- max(floor(log10(worst_ratio)),2)
-  x_breaks <- c(2,10,10^base_10)
-  x_labels <- c("",pow_text(10,1,latex_export),pow_text(10,base_10,latex_export))
+  x_breaks <- c()
+  x_limits <- c()
+  if ( sparsify_x_last_window ) {
+    x_breaks <- c(2,10^base_10)
+    x_labels <- c("",pow_text(10,base_10,latex_export))
+  } else {
+    x_breaks <- c(2,10,10^base_10)
+    x_labels <- c("",pow_text(10,1,latex_export),pow_text(10,base_10,latex_export))
+  }
   x_limits <- c(2,max(worst_ratio,10^base_10))
   if ( !show_infeasible_tick & !show_timeout_tick ) {
     if ( base_10 > 2 ) {
@@ -184,7 +194,13 @@ performanceProfilePlot = function(profile_plots,
   c = ggplot(profile_plots[profile_plots$tau %>=% 2.0 & profile_plots$tau %<=% max(worst_ratio,100),], aes(x=tau, y=rho, color=algorithm))  +
     geom_line(aes(color=algorithm),size=2*plot_line_size(latex_export)) +
     scale_color_manual(values=algo_color_mapping, drop = F) +
-    scale_x_continuous(trans="lam",breaks=x_breaks,labels=x_labels,expand = c(0, 0),limits=x_limits) +
+    scale_x_continuous(trans="log10",breaks=x_breaks,labels=x_labels,expand = c(0, 0),limits=x_limits) +
+    annotate("segment", x=c(2, 10, 100, 1000, 10000), y=-0.065, xend=c(2, 10, 100, 1000, 10000), yend=-0.05, size=.5,
+             col="black") +
+    geom_vline(aes(xintercept=10), colour="grey", linetype="11", size=.5) +
+    geom_vline(aes(xintercept=100), colour="grey", linetype="11", size=.5) +
+    geom_vline(aes(xintercept=1000), colour="grey", linetype="11", size=.5) +
+    geom_vline(aes(xintercept=10000), colour="grey", linetype="11", size=.5) +
     y_scale +
     expand_limits(y=c(0.0,1.0)) +
     coord_cartesian(ylim = c(0, 1), clip="off") +

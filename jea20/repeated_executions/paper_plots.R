@@ -34,7 +34,7 @@ algo_color_mapping <- c("$k$KaHyPar" = palette[[1]],
 
 ############## Performance Profile Plot (ALL) ############## 
 
-scaling <- 1.25
+scaling <- 1.29
 
 tikz("~/kahypar-jea/tikz_plots/repeated_executions_min_km1_overall.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
@@ -76,3 +76,17 @@ print(performace_plot(list(kahypar_k_1,
                       small_size = F))
 dev.off()
 
+
+compareQualityOfPartitioners(taus <- c(1.0), 
+                             objective <- "min_km1",
+                             kahypar_k_1,
+                             patoh_d,
+                             patoh_q,
+                             hmetis_r,
+                             hmetis_k)
+
+library(coin)
+
+print(wilcoxsign_test(patoh_q$avg_km1 ~ hmetis_r$avg_km1))
+print(wilcoxsign_test(patoh_q$avg_km1 ~ hmetis_k$avg_km1))
+print(wilcoxsign_test(hmetis_r$avg_km1 ~ hmetis_k$avg_km1))

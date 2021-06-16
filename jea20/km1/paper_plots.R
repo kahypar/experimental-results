@@ -85,7 +85,7 @@ dev.off()
 
 ############## Running Time Box Plot ############## 
 
-scaling <- 1.16
+scaling <- 1.195
 
 order <- c("HYPE", "PaToH-D", "PaToH-Q", "Mondriaan", "Zoltan-AlgD", "hMETIS-R", "hMETIS-K", "$k$KaHyPar")
 tikz("~/kahypar-jea/tikz_plots/km1_running_time_overall.tex", 
@@ -109,7 +109,7 @@ dev.off()
 
 ############## Performance Profile Plot (ALL) ############## 
 
-scaling <- 1.25
+scaling <- 1.29
 
 tikz("~/kahypar-jea/tikz_plots/km1_overall_only_k_kahypar.tex", 
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
@@ -127,6 +127,23 @@ print(performace_plot(list(kahypar_k,
                       show_timeout_tick = T,
                       widths = c(3,2,1,1),
                       legend_top_margin = -5,
+                      sparsify_x_last_window = T,
                       latex_export = T,
                       small_size = F))
 dev.off()
+
+compareQualityOfPartitioners(taus <- c(1.0, 1.1), kahypar_k,
+                             patoh_d,
+                             patoh_q,
+                             hmetis_r,
+                             hmetis_k,
+                             zoltan_alg_d,
+                             mondriaan,
+                             hype)
+
+# Wilcoxon Signed Ranked Tests
+
+library(coin)
+
+print(wilcoxsign_test(patoh_d$avg_km1 ~ mondriaan$avg_km1))
+  
