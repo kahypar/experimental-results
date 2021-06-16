@@ -4,14 +4,14 @@ source("../plots/running_time_box_plot.R")
 source("../plots/relative_running_time_plot.R")
 source("../plots/performance_profiles.R")
 
-############## SETUP DATA FRAMES ############## 
+############## SETUP DATA FRAMES ##############
 
 # Read Data Frames
 instances <- read.csv("instances.csv", header = TRUE)
 km1_kahypar_k <- aggreg_data(read.csv("km1_kKaHyPar.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-km1_kahypar_k_s <- aggreg_data(read.csv("km1_kkahypar-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-km1_kahypar_k_cac_s <- aggreg_data(read.csv("km1_kkahypar-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-km1_kahypar_k_f_cac_s <- aggreg_data(read.csv("km1_kkahypar-f-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+km1_kahypar_k_s <- aggreg_data(read.csv("km1_kKahypar-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+km1_kahypar_k_cac_s <- aggreg_data(read.csv("km1_kKahypar-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+km1_kahypar_k_f_cac_s <- aggreg_data(read.csv("km1_kKahypar-f-cac-s.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 
 # Compute Average Time per Pin
 km1_kahypar_k <- compute_avg_time_per_pin(km1_kahypar_k, instances)
@@ -41,17 +41,17 @@ km1_kahypar_k = semi_join(km1_kahypar_k, semi_join_filter, by=c('graph','k'))
 km1_kahypar_k$graph <- as.character(km1_kahypar_k$graph)
 
 
-############## Running Time Box Plot ############## 
+############## Running Time Box Plot ##############
 
 scaling <- 1.195
 
 order <- c("$k$KaHyPar", "$k$KaHyPar$-$S", "$k$KaHyPar$-$CAC$-$S", "$k$KaHyPar$-$F$-$CAC$-$S")
-tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_running_time.tex", 
+tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_running_time.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(running_time_per_pin_box_plot(list(km1_kahypar_k, 
-                                         km1_kahypar_k_s, 
-                                         km1_kahypar_k_cac_s, 
-                                         km1_kahypar_k_f_cac_s), 
+print(running_time_per_pin_box_plot(list(km1_kahypar_k,
+                                         km1_kahypar_k_s,
+                                         km1_kahypar_k_cac_s,
+                                         km1_kahypar_k_f_cac_s),
                                     show_infeasible_tick = F,
                                     show_timeout_tick = T,
                                     order = order,
@@ -59,17 +59,17 @@ print(running_time_per_pin_box_plot(list(km1_kahypar_k,
                                     small_size = F))
 dev.off()
 
-############## Performance Profile Plot (kKaHyPar) ############## 
+############## Performance Profile Plot (kKaHyPar) ##############
 
 scaling <- 1.29
 
-tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_component_quality.tex", 
+tikz("~/kahypar-jea/tikz_plots/km1_kahypar_k_component_quality.tex",
      width = 2.1666 * scaling, height = 1.666 * scaling, pointsize = 12)
-print(performace_plot(list(km1_kahypar_k, 
+print(performace_plot(list(km1_kahypar_k,
                            km1_kahypar_k_s,
                            km1_kahypar_k_cac_s,
-                           km1_kahypar_k_f_cac_s), 
-                      objective = "avg_km1", 
+                           km1_kahypar_k_f_cac_s),
+                      objective = "avg_km1",
                       hide_y_axis_title = F,
                       show_infeasible_tick = F,
                       show_timeout_tick = T,
