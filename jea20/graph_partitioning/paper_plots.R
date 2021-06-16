@@ -9,14 +9,14 @@ source("../plots/performance_profiles.R")
 # Read Data Frames
 instances <- read.csv("instances.csv", header = TRUE)
 instances$pins <- 2 * instances$m
-kaffpa_strong_opt_f <- aggreg_data(read.csv("cut_kaffpa_strong_opt_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strong_opt_g <- aggreg_data(read.csv("cut_kaffpa_strong_opt_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_opt_f <- aggreg_data(read.csv("cut_kaffpa_strong_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strong_opt_g <- aggreg_data(read.csv("cut_kaffpa_strong_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strong_opt_f$type <- "WebSocial"
 kaffpa_strong_opt_g$type <- "Dimacs"
 kaffpa_strong_opt_f$graph <- paste(kaffpa_strong_opt_f$graph, ".hgr", sep = "")
 kaffpa_strong_opt_g$graph <- paste(kaffpa_strong_opt_g$graph, ".hgr", sep = "")
-kaffpa_strongs_opt_f <- aggreg_data(read.csv("cut_kaffpa_strongs_opt_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
-kaffpa_strongs_opt_g <- aggreg_data(read.csv("cut_kaffpa_strongs_opt_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_opt_f <- aggreg_data(read.csv("cut_kaffpa_strongs_websocial.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
+kaffpa_strongs_opt_g <- aggreg_data(read.csv("cut_kaffpa_strongs_dimacs.csv", header = TRUE), timelimit = 28800, epsilon = 0.03)
 kaffpa_strongs_opt_f$type <- "WebSocial"
 kaffpa_strongs_opt_g$type <- "Dimacs"
 kaffpa_strongs_opt_f$graph <- paste(kaffpa_strongs_opt_f$graph, ".hgr", sep = "")
