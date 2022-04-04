@@ -50,6 +50,7 @@ def sample_until_timelimit(df, time_limit):
 		x = df.sample(n=1).iloc[0] # sample one row which creates new dataframe, then take the first row
 		if x.totalPartitionTime + time_sum <= time_limit:
 			rows.append(x)
+			time_sum += x.totalPartitionTime
 		else:
 			fails += 1
 	return rows
