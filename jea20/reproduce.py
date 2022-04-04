@@ -87,7 +87,7 @@ if __name__ == '__main__':
 	df = pd.read_csv(args.csv)
 
 	rows = sample_until_timelimit(df, args.time)
-	for r in rows:
-		print(r.graph, r.k, r.seed, r.km1, r.imbalance)
-	# run_instances(rows)
+	#for r in rows:
+	#	print(r.graph, r.k, r.seed, r.km1, r.imbalance)
+	run_instances(rows)
 
