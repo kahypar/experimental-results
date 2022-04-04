@@ -4,11 +4,42 @@ import argparse
 import scipy.stats
 import numpy as np
 
+from threading import Timer
+import signal
+import shutil
+import subprocess
+import os
+
 def run_algo(graph, k, eps,seed):
-	km1 = 0
-	cut = 0
-	time = 2
-	imbalance = 0
+	config = "kahypar/config/km1_kKaHyPar_sea20.ini"
+	benchmark_dir = "benchmark_set/"
+	kahypar_k = "kahypar/release/kahypar/application/KaHyPar"
+	kahypar_k_proc = subprocess.Popen([kahypar_k,
+						"-h" + benchmark_dir + graph,
+						"-k" + str(k),
+						"-e" + str(eps),
+						"--seed=" + str(seed),
+						"-okm1" ,
+						"-mdirect",
+						"-p" + config,
+						"--sp-process=true"],
+	stdout=subprocess.PIPE, universal_newlines=True, preexec_fn=os.setsid)
+	out, err = kahypar_k_proc.communicate()
+
+	time = 2147483647
+	cut = 2147483647
+	km1 = 2147483647
+	imbalance = 1.0
+
+	if kahypar_k_proc.returncode == 0:
+		# Extract metrics out of KaHyPar-CA output
+		for line in out.split('\n'):
+			s = str(line).strip()
+			if "RESULT" in s:
+				km1 = int(s.split(" km1=")[1].split(" ")[0])
+				cut = int(s.split(" cut=")[1].split(" ")[0])
+				time = float(s.split(" totalPartitionTime=")[1].split(" ")[0])
+				imbalance = float(s.split(" imbalance=")[1].split(" ")[0])
 	return km1, cut, time, imbalance
 
 def sample_until_timelimit(df, time_limit):
@@ -34,6 +65,7 @@ def run_instances(rows):
 		time_ratios.append(r.totalPartitionTime / time)
 		if km1 != r.km1 or cut != r.cut or imbalance != r.imbalance:
 			print("mismatch on", graph, k, eps, seed)
+			print(km1, r.km1, "|", cut, r.cut, "|", imbalance, r.imbalance)
 			mismatch_instances.append((graph,k,eps,seed))
 	if len(mismatch_instances) == 0:
 		print("All data reproduced! Yay.")
@@ -55,5 +87,7 @@ if __name__ == '__main__':
 	df = pd.read_csv(args.csv)
 
 	rows = sample_until_timelimit(df, args.time)
-	run_instances(rows)
+	for r in rows:
+		print(r.graph, r.k, r.seed, r.km1, r.imbalance)
+	# run_instances(rows)
 
