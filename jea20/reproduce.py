@@ -57,33 +57,35 @@ def sample_until_timelimit(df, time_limit):
 	return rows
 
 def run_instances(rows):
-	time_ratios = []
-	mismatch_instances = []
+	output = []
 	for i, r in enumerate(rows):
 		graph,k,eps,seed = r.graph,r.k,r.epsilon,r.seed
 		print(i,"/",len(rows),sep='', end=' ')
 		print("running", graph, k, eps, seed)
 		km1, cut, time, imbalance = run_algo(graph, k, eps, seed)
-		time_ratios.append(r.totalPartitionTime / time)
-		if km1 != r.km1 or cut != r.cut or imbalance != r.imbalance:
-			print("mismatch on", graph, k, eps, seed)
-			print(km1, r.km1, "|", cut, r.cut, "|", imbalance, r.imbalance)
-			mismatch_instances.append((graph,k,eps,seed, r.km1/km1))
-	if len(mismatch_instances) == 0:
-		print("All data reproduced! Yay.")
-	else:
-		print("There were", len(mismatch_instances), "mismatches.")
-		for deviation in [0.03, 0.01, 0.001]:
-			ub = 1 + deviation
-			lb = 1 - deviation
-			n = len(list(filter(lambda x : x[4] < lb or x[4] > ub, mismatch_instances)))
-			print("of which", n, "were off by more than", deviation)
-		print(mismatch_instances)
 
-	time_ratios = sorted(time_ratios)
-	print("gmean time ratio", scipy.stats.gmean(time_ratios))
-	for q in [0.0, 0.05, 0.25, 0.5, 0.75, 0.95, 1.0]:
-		print("quantile", q, "time ratio:", np.quantile(time_ratios, q))
+		if km1 == 0:
+			if r.km1 == 0:
+				km1_ratio = 1
+			else:
+				km1_ratio = 0
+		else:
+			km1_ratio = r.km1 / km1
+
+		output.append((graph,k,eps,seed,km1_ratio, r.totalPartitionTime/time))
+		
+	df = pd.DataFrame(data=output, columns=["graph","k","eps","seed","km1_ratio","time_ratio"])
+	return df
+
+def analyze(df):
+	print("list of all mismatches")
+	print(df[df.km1_ratio != 1.0])
+
+	print("running time ratios: record / fresh")
+	print(df["time_ratio"].describe(percentiles=[0.05, 0.25, 0.5, 0.75, 0.95]))
+	
+	for deviation in [0.03, 0.01, 0.001]:
+		print("There were", len(df[(df.km1_ratio > 1+deviation) | (df.km1_ratio < 1-deviation)]), "km1 mismatches with more deviation than", deviation)
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -94,7 +96,6 @@ if __name__ == '__main__':
 	df = pd.read_csv(args.csv)
 
 	rows = sample_until_timelimit(df, args.time)
-	#for r in rows:
-	#	print(r.graph, r.k, r.seed, r.km1, r.imbalance)
-	run_instances(rows)
-
+	out_df = run_instances(rows)
+	out_df.to_csv('out.csv', index=False)
+	analyze(out_df)
