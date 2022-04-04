@@ -46,13 +46,14 @@ def sample_until_timelimit(df, time_limit):
 	rows = []
 	time_sum = 0
 	fails = 0
-	while fails < 20:
+	while fails < 200:
 		x = df.sample(n=1).iloc[0] # sample one row which creates new dataframe, then take the first row
-		if x.totalPartitionTime + time_sum <= time_limit:
+		if x.totalPartitionTime + time_sum <= time_limit and x.totalPartitionTime <= 200:	# accept as long as we stay below time limit, and dont take too long running ones
 			rows.append(x)
 			time_sum += x.totalPartitionTime
 		else:
 			fails += 1
+	print(time_sum)
 	return rows
 
 def run_instances(rows):
@@ -67,11 +68,16 @@ def run_instances(rows):
 		if km1 != r.km1 or cut != r.cut or imbalance != r.imbalance:
 			print("mismatch on", graph, k, eps, seed)
 			print(km1, r.km1, "|", cut, r.cut, "|", imbalance, r.imbalance)
-			mismatch_instances.append((graph,k,eps,seed))
+			mismatch_instances.append((graph,k,eps,seed, r.km1/km1))
 	if len(mismatch_instances) == 0:
 		print("All data reproduced! Yay.")
 	else:
 		print("There were", len(mismatch_instances), "mismatches.")
+		for deviation in [0.03, 0.01, 0.001]:
+			ub = 1 + deviation
+			lb = 1 - deviation
+			n = len(list(filter(lambda x : x[4] < lb or x[4] > ub, mismatch_instances)))
+			print("of which", n, "were off by more than", deviation)
 		print(mismatch_instances)
 
 	time_ratios = sorted(time_ratios)
