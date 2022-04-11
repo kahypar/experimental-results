@@ -18,7 +18,7 @@ First log on a free machine. The login node displays a table of free machines (u
 ssh i10pc132
 ```
 
-Then run the setup (downloads the instances and code, and compiles it), and subsequently run a subset of the instances.
+Then run the setup (downloads the instances, checks out the code and compiles it), and subsequently run a subset of the instances.
 
 ```
 exclusive ./setup.sh
@@ -32,3 +32,6 @@ The default is 2 hours.
 
 Unfortunately, even with correct compiler versions we couldn't exactly reproduce all instances.
 Therefore the reproduce script prints a list of all mismatches, and for some small deltas, how many instances were off by that delta.
+Finally the results are also stored in a file out.csv.
+
+The compiler location is hard-coded in the setup script for repeatability purposes, otherwise the setup is portable.
