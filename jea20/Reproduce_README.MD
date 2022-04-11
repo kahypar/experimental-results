@@ -18,7 +18,7 @@ First log on a free machine. The login node displays a table of free machines (u
 ssh i10pc132
 ```
 
-Then run the setup (downloads the instanced and code, and compiles it), and subsequently run a subset of the instances.
+Then run the setup (downloads the instances and code, and compiles it), and subsequently run a subset of the instances.
 
 ```
 exclusive ./setup.sh
@@ -31,4 +31,4 @@ The reproduce script takes a parameter --time in seconds, which is the amount of
 The default is 2 hours.
 
 Unfortunately, even with correct compiler versions we couldn't exactly reproduce all instances.
-Therefore the reproduce script prints a list of all mismatches, and for a some small deltas, how many instances were off by that delta.
+Therefore the reproduce script prints a list of all mismatches, and for some small deltas, how many instances were off by that delta.
