@@ -78,7 +78,7 @@ def run_instances(rows):
 	return df
 
 def analyze(df):
-	print("list of all mismatches")
+	print("list of all mismatches", len(df[df.km1_ratio != 1.0]), "/", len(df))
 	print(df[df.km1_ratio != 1.0])
 
 	print("running time ratios: record / fresh")
